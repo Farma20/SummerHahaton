@@ -2,6 +2,7 @@ package com.example.summerhahaton.View.CalendarUI
 
 import android.annotation.SuppressLint
 import android.content.ClipData.Item
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,7 +13,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -27,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.summerhahaton.View.CalendarUI.Models.CalendarDataUpdateClass
+import com.example.summerhahaton.View.CalendarUI.UIComponents.AdminDialog
 import com.example.summerhahaton.View.CalendarUI.UIComponents.Calendar
 import com.example.summerhahaton.View.CalendarUI.UIComponents.WorkCard
 import com.example.summerhahaton.View.CalendarUI.ViewModel.CalendarViewModel
@@ -44,20 +50,42 @@ fun CalendarUI(navController: NavController, calendarViewModel: CalendarViewMode
 
         val selectDate = remember { mutableStateOf(LocalDate.now()) }
 
+        val openDialog = remember { mutableStateOf(false) }
+        if (openDialog.value)
+            AdminDialog(openDialog, calendarViewModel)
+
         Calendar(selectDate, calendarViewModel)
         println(selectDate.value)
         Surface(
             shape = RoundedCornerShape(24.dp, 24.dp),
-            color = Color(0xFFF2F2F2),
+            color = Color(0xFFe6f2ff),
             modifier = Modifier
                 .fillMaxSize()
                 .padding(top = 16.dp)
                 .padding(horizontal = 0.dp),
         ) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.BottomEnd
+            ){
+                FloatingActionButton(
+                    modifier = Modifier.padding(bottom = 20.dp, end = 20.dp),
+                    onClick = { openDialog.value = !openDialog.value },
+                    containerColor = MainBlue,
+                    contentColor = Color.White,
+                    content = {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Добавить"
+                        )
+                    }
+                )
+            }
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()

@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.summerhahaton.Data.Models.CalendarDataClass
+import com.example.summerhahaton.Data.Models.UsersListDataModel
 import com.example.summerhahaton.Data.Repository.MainRepository
 import com.example.summerhahaton.View.CalendarUI.Models.CalendarDataUpdateClass
 import com.example.summerhahaton.View.CalendarUI.Models.CalendarDataUpdateClassItem
@@ -18,11 +19,15 @@ class CalendarViewModel:ViewModel() {
     var allCalendarData by mutableStateOf(CalendarDataUpdateClass())
     var allShiftsDate by mutableStateOf<List<LocalDate>>(listOf())
     var selectedShift by mutableStateOf<CalendarDataUpdateClassItem?>(null)
+    var allUsers by mutableStateOf(UsersListDataModel())
 
     init {
         MainRepository.calendarData.observeForever(){
             allCalendarData = convertToDateTime(data = it)
             allShiftsDate = getAllDate(allCalendarData)
+        }
+        MainRepository.usersList.observeForever(){
+            allUsers = it
         }
 
     }
