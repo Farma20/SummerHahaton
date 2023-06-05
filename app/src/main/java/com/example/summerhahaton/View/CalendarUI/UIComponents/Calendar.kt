@@ -33,6 +33,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,7 +51,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.summerhahaton.R
-import com.example.summerhahaton.ui.theme.ProjectGrey
+import com.example.summerhahaton.View.CalendarUI.ViewModel.CalendarViewModel
+import com.example.summerhahaton.ui.theme.LightGreen
+import com.example.summerhahaton.ui.theme.MainBlue
 import com.kizitonwose.calendar.compose.CalendarState
 import com.kizitonwose.calendar.compose.HorizontalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
@@ -80,7 +83,8 @@ private val convertNumInMonth = mapOf<Int, String>(
 )
 
 @Composable
-fun Calendar() {
+fun Calendar(selectedDate: MutableState<LocalDate?>, calendarViewModel: CalendarViewModel) {
+
     val currentMonth = remember { YearMonth.now() }
     val startMonth = remember { currentMonth.minusMonths(100) }
     val endMonth = remember { currentMonth.plusMonths(100) }
@@ -93,7 +97,7 @@ fun Calendar() {
         firstDayOfWeek = daysOfWeek.first(),
     )
 
-    var selectedDate by remember { mutableStateOf<LocalDate?>(LocalDate.now()) }
+
 
     Column(
         modifier = Modifier,
@@ -103,8 +107,8 @@ fun Calendar() {
         HorizontalCalendar(
             state = state,
             dayContent = { it->
-                Day(it, isSelected = selectedDate == it.date){ day ->
-                    selectedDate = if (selectedDate == day.date) null else day.date
+                Day(it, isSelected = selectedDate.value == it.date, calendarViewModel.allShiftsDate){ day ->
+                    selectedDate.value = if (selectedDate.value == day.date) day.date else day.date
                 }
             },
             monthHeader = {DaysOfWeekTitle(dayOfWeek)},
@@ -137,7 +141,7 @@ fun CalendarControl(state:CalendarState){
             .padding(horizontal = 26.dp)
             .padding(vertical = 8.dp),
         colors = CardDefaults.cardColors(
-            containerColor = ProjectGrey
+            containerColor = MainBlue
         ),
         shape = RoundedCornerShape(24.dp),
     ) {
@@ -174,8 +178,8 @@ fun CalendarControl(state:CalendarState){
                 }
             ) { targetMonth ->
                 Text(
-
                     text = "${convertNumInMonth[targetMonth]}",
+                    color = Color.White
                 )
             }
             Box(
@@ -232,13 +236,15 @@ fun DaysOfWeekTitle(daysOfWeek: List<String>) {
 }
 
 @Composable
-fun Day(date: CalendarDay, isSelected: Boolean, onClick: (CalendarDay) -> Unit) {
+fun Day(date: CalendarDay, isSelected: Boolean, allShiftDate: List<LocalDate>,onClick: (CalendarDay) -> Unit) {
 
     val currentDate = LocalDate.now()
 
     val calendarYear = date.date.year
     val calendarMonth = date.date.month.value
     val calendarDay = date.date.dayOfMonth
+
+    val calendarLocalDateDay = LocalDate.of(calendarYear,calendarMonth, calendarDay)
 
     val isCurrentDay: Boolean = (
                 currentDate.year == calendarYear &&
@@ -253,7 +259,8 @@ fun Day(date: CalendarDay, isSelected: Boolean, onClick: (CalendarDay) -> Unit) 
         modifier = Modifier
             .size(35.dp)
             .clip(CircleShape)
-            .border(1.dp, if (isSelected) Color.Blue else Color.Transparent, CircleShape)
+            .background(if (calendarLocalDateDay in allShiftDate) Color(0xD280FEC1) else Color.Transparent)
+            .border(1.dp, if (isSelected) MainBlue else Color.Transparent, CircleShape)
             .clickable(
                 enabled = date.position == DayPosition.MonthDate,
                 onClick = { onClick(date) }
@@ -276,7 +283,7 @@ fun Day(date: CalendarDay, isSelected: Boolean, onClick: (CalendarDay) -> Unit) 
                     .padding(bottom = 2.dp)
                     .size(5.dp)
                     .clip(CircleShape)
-                    .background(Color.Blue),
+                    .background(MainBlue),
             )
         }
     }
