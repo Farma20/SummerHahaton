@@ -15,6 +15,7 @@ import com.example.summerhahaton.Data.Repository.MainRepository
 import com.example.summerhahaton.View.CalendarUI.CalendarUI
 import com.example.summerhahaton.View.CalendarUI.Navigate.CalendarNavigate
 import com.example.summerhahaton.View.CalendarUI.UIComponents.PersonTaskPage
+import com.example.summerhahaton.View.CalendarUI.UIComponents.welcomeScreen
 import com.example.summerhahaton.ui.theme.SummerHahatonTheme
 
 class MainActivity : ComponentActivity() {
@@ -25,7 +26,6 @@ class MainActivity : ComponentActivity() {
             SummerHahatonTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = Color.White) {
-//                    CalendarUI()
                     CalendarNavigate()
                 }
             }

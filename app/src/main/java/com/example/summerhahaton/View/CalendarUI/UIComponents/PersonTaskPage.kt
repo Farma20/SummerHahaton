@@ -97,7 +97,7 @@ fun TaskCard(task: TaskUpdate){
             Button(
                 modifier = Modifier
                     .padding(top = 4.dp)
-                    .width(210.dp),
+                    .fillMaxWidth(),
                 onClick = {
                     loadingAnimationOn = true
                     MainRepository.taskConform(task.id)
