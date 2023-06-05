@@ -21,6 +21,18 @@ object MainRepository: ViewModel() {
             }
         }
     }
+
+    fun taskConform(taskId:Int){
+        viewModelScope.launch {
+            try {
+                HAHATOnRetrofit.retrofitService.conformTask(mapOf("task_id" to taskId))
+                getCalendarData()
+            }catch (e:Exception){
+                println(e)
+            }
+        }
+    }
+
     init {
         getCalendarData()
     }

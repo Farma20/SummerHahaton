@@ -14,7 +14,7 @@ data class TaskUpdate(
     @SerializedName("name")
     val name: String,
     @SerializedName("status")
-    val status: String,
+    var status: String,
     @SerializedName("value")
     val value: String
 )
